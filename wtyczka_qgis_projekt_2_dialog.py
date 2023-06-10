@@ -23,9 +23,11 @@
 """
 
 import os
-
+from PyQt5.QtCore import QVariant
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from qgis.utils import iface
+from qgis.core import *
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -42,3 +44,59 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.pushButton_wybierz.clicked.connect(self.wybierz_punkty)
+        self.pushButton_clear.clicked.connect(self.clear)
+        
+        
+        self.pushButton_oblicz.clicked.connect(self.oblicz)
+        wybrana_warstwa = self.mMapLayerComboBox_wybor_warstwy.currentLayer()
+        self.mFieldComboBox_wybor_atrybutu.setLayer(wybrana_warstwa)
+        self.mFieldComboBox_wybor_atrybutu.currentField()
+
+
+    # wybiera narzędzie do zaznaczania obiektów
+    def wybierz_punkty(self):
+        layer = iface.activeLayer()
+        iface.setActiveLayer(layer)
+        iface.actionSelect().trigger()
+
+    # czyści okienko tekstowe
+    def clear(self):
+        self.plainTextEdit_wyniki.clear()
+
+
+
+    # część obliczeniowa
+    def oblicz(self):
+        layer = iface.activeLayer()
+        selected_features = layer.selectedFeatures()
+
+        if self.radioButton_dH.isChecked() == True:
+            if len(selected_features) != 2:
+                QgsMessageLog.logMessage("Prosze wybrac 2 punkty.")
+                return
+
+            feature1 = selected_features[0]
+            feature2 = selected_features[1]
+
+            atrybut = self.mFieldComboBox_wybor_atrybutu.currentField()
+            
+            if atrybut != 'h_plevrf2007nh' and atrybut != 'h_plkron86nh':
+                wiadomosc = 'Niestety wybrany atrybut nie dotyczy wysokosci, musisz go zmienić. Obsługiwalne atrybuty to h_plevrf2007nh h_plkron86nh'
+                self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
+                iface.messageBar().pushMessage(wiadomosc)
+                return
+            
+            wysokosc1 = feature1.attribute(atrybut)
+            wysokosc2 = feature2.attribute(atrybut)
+            nr_wysokosc1 = feature1.attribute('nr_punktu')
+            nr_wysokosc2 = feature2.attribute('nr_punktu')
+            if wysokosc1 is None or wysokosc2 is None:
+                QgsMessageLog.logMessage("Wybrane punkty nie maja okreslonej wysokosci.")
+                return
+
+            dH = round(wysokosc2 - wysokosc1,5)
+
+            wiadomosc = f'Różnica wysokosci miedzy punktami: {nr_wysokosc1} o H ={wysokosc1} [m] oraz {nr_wysokosc2} o H = {wysokosc2} [m] wynosi: {dH} [m]'
+            self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
+            iface.messageBar().pushMessage(wiadomosc)
