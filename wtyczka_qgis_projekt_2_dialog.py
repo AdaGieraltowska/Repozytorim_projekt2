@@ -102,8 +102,4 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
             iface.messageBar().pushMessage(wiadomosc)
             
             
-        elif self.radioButton_pole.isChecked() == True:
-            if len(selected_features) < 3 :
-                QgsMessageLog.logMessage("Minimalna liczba punktów wynosi 3.")
-                return
             
