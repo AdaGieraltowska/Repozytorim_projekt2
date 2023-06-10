@@ -326,13 +326,7 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
             feature2 = selected_features[1]
 
             atrybut = self.mFieldComboBox_wybor_atrybutu.currentField()
-            """
-            if atrybut != 'h_plevrf2007nh' and atrybut != 'h_plkron86nh':
-                wiadomosc = 'Niestety wybrany atrybut nie dotyczy wysokosci, musisz go zmienić. Obsługiwalne atrybuty to h_plevrf2007nh h_plkron86nh'
-                self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
-                iface.messageBar().pushMessage(wiadomosc)
-                return
-            """
+
             wysokosc1 = feature1.attribute(atrybut)
             wysokosc2 = feature2.attribute(atrybut)
             id1 = feature1.id()
@@ -349,7 +343,7 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
 
             dH = round(wysokosc2 - wysokosc1,5)
 
-            wiadomosc = f'Różnica wysokosci miedzy punktami o ID: {id1} o H ={wysokosc1} [m] oraz {id2} o H = {wysokosc2} [m] wynosi: {dH} [m]'
+            wiadomosc = f'Różnica wysokosci miedzy punktami o ID: {id1} o H ={wysokosc1} [m] oraz {id2} o H = {wysokosc2} [m] wynosi: {dH} [m] ,natomiast między punktami o ID {id2} o H ={wysokosc2} [m] oraz {id1} o H ={wysokosc1} [m] wynosi: {-dH} [m]'
             self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
             iface.messageBar().pushMessage(wiadomosc)
             
@@ -404,8 +398,8 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
 
             if self.checkBox_poligon.isChecked() == True:
                 poligon_punkty = [QgsPointXY(x, y) for x, y in wsp2]
-                poligon = QgsGeometry.fromPolygonXY([poligon_punkty])
-
+                #poligon = QgsGeometry.fromPolygonXY([poligon_punkty])
+                poligon = QgsGeometry.fromMultiPointXY(poligon_punkty).convexHull()
                 projekt = QgsProject.instance()
                 crs = layer.crs()
                 epsg = crs.authid()
