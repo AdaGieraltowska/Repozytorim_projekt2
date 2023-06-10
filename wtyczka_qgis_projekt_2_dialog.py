@@ -100,3 +100,10 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
             wiadomosc = f'Różnica wysokosci miedzy punktami: {nr_wysokosc1} o H ={wysokosc1} [m] oraz {nr_wysokosc2} o H = {wysokosc2} [m] wynosi: {dH} [m]'
             self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
             iface.messageBar().pushMessage(wiadomosc)
+            
+            
+        elif self.radioButton_pole.isChecked() == True:
+            if len(selected_features) < 3 :
+                QgsMessageLog.logMessage("Minimalna liczba punktów wynosi 3.")
+                return
+            
