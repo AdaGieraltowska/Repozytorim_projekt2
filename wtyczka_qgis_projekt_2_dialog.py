@@ -343,16 +343,17 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
 
             dH = round(wysokosc2 - wysokosc1,5)
 
-            wiadomosc = f'Różnica wysokosci miedzy punktami o ID: {id1} o H ={wysokosc1} [m] oraz {id2} o H = {wysokosc2} [m] wynosi: {dH} [m] ,natomiast między punktami o ID {id2} o H ={wysokosc2} [m] oraz {id1} o H ={wysokosc1} [m] wynosi: {-dH} [m]'
+            wiadomosc = f'Różnica wysokosci miedzy punktami o ID: {id1} o H = {wysokosc1} [m] oraz {id2} o H = {wysokosc2} [m] wynosi: {dH} [m], natomiast między punktami o ID: {id2} o H = {wysokosc2} [m] oraz {id1} o H = {wysokosc1} [m] wynosi: {-dH} [m]'
             self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
             iface.messageBar().pushMessage(wiadomosc)
             
         elif self.radioButton_pole.isChecked() == True:
+            #layer = iface.activeLayer()
+            #selected_features = layer.selectedFeatures()
             if len(selected_features) < 3:
                 QgsMessageLog.logMessage("Prosze wybrac minimum 3 punkty.")
                 return
             
-            wsp = []
             wsp2 = []
             for feature in selected_features:
                 geom = feature.geometry()
@@ -361,20 +362,21 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                     if geomSingleType:
                         x = geom.asPoint().x()
                         y = geom.asPoint().y()
-                        wsp.append((y,x))
                         wsp2.append((x,y))
                 else:
                     QgsMessageLog.logMessage("Niepoprawna geometria")
+            
+            wsp = sorted(wsp2, key=lambda p: p[1])
 
-            wsp = sorted(wsp, key=lambda p: (p[0], p[1]))
-
-            n = len(wsp)
             pole = 0.0
+            n = len(wsp) 
             for i in range(n):
-                j = (i+1)%n
-                pole += wsp[i][0]*wsp[j][1]-wsp[j][0]*wsp[i][1]
-            pole /= 2
-            pole = abs(pole)
+                j = (i + 1) % n
+                pole += wsp[i][0] * wsp[j][1]
+                pole -= wsp[j][0] * wsp[i][1]
+
+            pole = abs(pole/2)
+
 
             if self.checkBox_ha.isChecked() == True:
                 pole = pole/10000
@@ -383,6 +385,7 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 jednostka = 'm2'
             elif self.checkBox_a.isChecked() == True:
                 pole = pole/100
+                
                 jednostka = 'a'
             else:
                 QgsMessageLog.logMessage("Niewybrano jednostki, domyślna to metry")
@@ -392,13 +395,16 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
             for i in selected_features:
                 id = id + str(i.id()) + ', '
 
-            wiadomosc = f'Pole powierzchni figury o wierzchołkach w punktach o ID:{id} wynosi: {round(pole,3)} {jednostka}'
+            if n > 4:
+                wiadomosc = f'Pole powierzchni figury o liczbie wierzchołków większej niż 4 nie działa poprawnie'
+            else:
+                wiadomosc = f'Pole powierzchni figury o wierzchołkach w punktach o ID:{id} wynosi: {round(pole,3)} {jednostka}'
             self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
             iface.messageBar().pushMessage(wiadomosc)
 
             if self.checkBox_poligon.isChecked() == True:
                 poligon_punkty = [QgsPointXY(x, y) for x, y in wsp2]
-                #poligon = QgsGeometry.fromPolygonXY([poligon_punkty])
+                #poligon = QgsGeometry.fromPolygonXY([polygon])
                 poligon = QgsGeometry.fromMultiPointXY(poligon_punkty).convexHull()
                 projekt = QgsProject.instance()
                 crs = layer.crs()
