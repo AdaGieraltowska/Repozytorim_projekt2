@@ -20,11 +20,11 @@ Wtyczka posiada dodatkowe funkcjonalności takie jak:
 
 ### Opis interfejsu użytkownika
 Wtyczka po uruchomieniu wygląda następująco i podzielony jest na dwie główne sekcje: lewą obsługującą obliczenie pola powierzchni oraz przewyższenia i prawą obsługującą importowanie pliku .txt do projektu wraz z sepecyfikacjami dotyczącymi importu. 
-
+<!--
 <p align="center">
   <img src="https://i.imgur.com/d80RQHe.png" />
 </p>
-
+-->
 <p align="center">
   <img src="https://i.imgur.com/NuLO186.png" />
 </p>
