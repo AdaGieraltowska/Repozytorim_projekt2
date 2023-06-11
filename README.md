@@ -26,15 +26,15 @@ Wtyczka po uruchomieniu wygląda następująco i podzielony jest na dwie główn
 </p>
 -->
 <p align="center">
-  <img src="https://i.imgur.com/NuLO186.png" />
+  <img src="https://i.imgur.com/NuLO186.png width="50%"" />
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/Jyh7B0k.png" />
+  <img src="https://i.imgur.com/Jyh7B0k.png width="50%"" />
 </p>
 
 <p align="center">
-  <img src="https://i.imgur.com/B0kfKbe.png" />
+  <img src="https://i.imgur.com/B0kfKbe.png width="50%"" />
 </p>
 
 Opcje interfejsu użytkownika:
