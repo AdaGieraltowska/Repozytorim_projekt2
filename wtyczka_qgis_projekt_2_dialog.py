@@ -447,5 +447,3 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 iface.messageBar().pushMessage(wiadomosc2)
 
                 iface.setActiveLayer(layer)
-
-            

@@ -1,9 +1,4 @@
 # Repozytorim_projekt2
-# Repozytorim_projekt2
-
-# Repozytorim_projekt2
-### Funkcjonalności wtyczki  
-Wtyczka oblicza różnice wysokości oraz pole powierzchni na podstawie współrzędnych zaznaczonych punktów metodą Gaussa. Dodatkowo ma opcję wgrania pliku do projektu i rysowania poligonu na podstawie zaznaczonych punktów do obliczenia pola powierzchni.
 ### Wymagania 
 - program QGIS wersja minimum 3.22
 - python 3.9
@@ -13,45 +8,133 @@ Wtyczka oblicza różnice wysokości oraz pole powierzchni na podstawie współr
 - biblioteka qgis.PyQt
 
 Program został napisany dla systemu operacyjnego Windows 10 i Windows 11
-
-## Opis użycia programu
-W zależności od potrzeb można wyrożnić 2 główne funkcjonalności wtyczki:
-- Obliczanie przewyższenia
-- Obliczenie pola powierzchni metodą Gaussa
-### Ogólny wygląd
-Wtyczka po uruchomieniu wygląda następująco:
-![img](https://i.imgur.com/d80RQHe.png)
-Po lewej stronie widoczny jest wybór jakie obliczenia ma wykonać wtyczka
-### Wybór obliczeń
-![Imgur](https://i.imgur.com/8sLBPZb.png)
-Po zaznaczeniu **Różnica wysokości** trzeba wybrać w pierwszej liście warstwę , a w drugiej nazwę atrybutu, która zawiera wysokości punktów. 
-![Imgur](https://i.imgur.com/Xp8TP5K.png). 
-Do wykonania tego obliczenia wymagany jest wybór 2 punktów ,w innym przypadku zostanie zwrócony komunikat o nie spełnieniu tego warunku.
+### Podstawowe funkcjonalności wtyczki  
+Wtyczka oblicza różnice wysokości oraz pole powierzchni metodą Gaussa na podstawie współrzędnych zaznaczonych punktów. 
+### Dodatkowe funkcjonalności
+Wtyczka posiada dodatkowe funkcjonalności takie jak:
+- Wyczyszczenie okna wynikowego.
+- Zresetowanie zaznaczonch punktów na warstwie na żądanie użytkownika.
+- Możliwość narysowania poligonu opartego w wybrane punkty na żądanie uzytkownika.
+- Możliwość wgrania pliku .txt do projektu.
 
 
-Finalnie w oknie dialogowym zostanie wyświetlona wartość przewyższenia w kierunku głównym jak i w kierunku powrotnym. 
-![Imgur](https://i.imgur.com/d2w7huc.png)
+### Opis interfejsu użytkownika
+Wtyczka po uruchomieniu wygląda następująco i podzielony jest na dwie główne sekcje: lewą obsługującą obliczenie pola powierzchni oraz przewyższenia i prawą obsługującą importowanie pliku .txt do projektu wraz z sepecyfikacjami dotyczącymi importu. 
+<!--
+<p align="center">
+  <img src="https://i.imgur.com/d80RQHe.png" />
+</p>
+-->
+<p align="center">
+  <img src="https://i.imgur.com/NuLO186.png width="50%"" />
+</p>
 
+<p align="center">
+  <img src="https://i.imgur.com/Jyh7B0k.png width="50%"" />
+</p>
 
+<p align="center">
+  <img src="https://i.imgur.com/B0kfKbe.png width="50%"" />
+</p>
 
+Opcje interfejsu użytkownika:
+- **1** -- wybór obliczenia przewyższenia pomiędzy punktami
+- **2** -- wybór obliczenia pola powierzchni
+    - **2a/2b/2c** -- wybór jednostki obliczonego pola 
+    - **2d** -- wybór wyrysowania poligonu
+- **3** -- wybór warstwy ,na której będą wykonywane operacje
+    - **3a** -- wybór atrybutu dla którego ma zostać wykonana funkcjonalność
+- **4** -- okno umożliwiające wybór punktów poprzez wskazanie indeks punktu
+- **5** -- okno wynikowe
+- **6** -- przycisk *"Odznacz"*
+- **7** -- przycisk *"Wybierz punkty"*
+- **8** -- przycisk *"Wyczyść"*
+- **9** -- przycisk *"Oblicz"*
+- **10** -- checkbox wskazujący układ współrzędnych importowanego punkt dla układu PL2000
+    - **10a/10b/10c/10d** -- checkboxy definiujące strefe odwzorowawczą układu PL2000
+- **11** -- checkbox wskazujący układ współrzędnych importowanego punkt dla układu PL1992
+- **12** -- pole tekstowe umożliwiające podanie ścieżki dostępu do importowanego pliku
+- **13** -- pole tekstowe umozliwiające podanie nazwy nowotworzonej warstwy projektu
+- **14** -- przycisk *"Wczytaj"*
 
-Natomiast po zaznaczeniu **Pole powierzchni** wyświetli się wybór w jakich jednostkach ma być obliczone pole. Domyślną jednostką są metry kwadratowe. Pojawia się również dodatkowa opcja, która rysuje poligon dla zaznaczonych punktów.
 ### Wybór punktów
 Punkty dla których  mają zostac wykonane obliczenia można określić na 3 sposoby:
-1. przed uruchomieniem wtyczki poprzez zaznaczenie ich na widocznej warstwie,
-2. poprzez zaznaczenie ich numerow ID ,w oknie znajdującym się po lewej stronie okna wynikowego,
-3. poprzez naciśnięcie przycisku **Wybierz punkty** ,ktory zminimalizuje okno wtyczki i pozwoli na wybór punktów na widocznej warstwie.
+- **Metoda 1** poprzez **zaznaczenie ich numerow ID (4)**,w oknie znajdującym się po lewej stronie okna wynikowego
+- **Metoda 2** poprzez naciśnięcie przycisku **Wybierz punkty (7)** ,ktory zminimalizuje okno wtyczki i pozwoli na wybór punktów na widocznej warstwie
 
-W trakcie pracy z wtyczką należy jednak nie zmieniać jednej uprzednio wybranej metody wprowadzania punktu. 
+Jeśli użytkownik korzysta z **obu metod jednocześnie** zalecane jest przed każdym kolejnym przeliczeniem, czy roznic wysokości,czy pola powierzchni, aby resetować wybrane obiekty na warstwie używając przycisku **Odznacz (6)**, ponieważ zaznaczane punkty poprzez numery ID nie są wyświetlane na warstwie jako wybrane, ale wtyczka je bierze pod uwagę.
 
-Zalecane jest ,aby przed każdym kolejnym przeliczeniem ,czy roznic wysokości ,czy pola powierzchni resetować wybrane obiekty na warstwie używając przycisku **Odznacz**
+### Wybór obliczeń i ich obsługa
+<p align="center">
+  <img src="https://i.imgur.com/8sLBPZb.png" />
+</p>
 
-### Wgrywanie pliku
+Po zaznaczeniu **Różnica wysokości (1)** należy wybrać w pierwszej liście **warstwę (3)**, a w drugiej **nazwę atrybutu (3a)**, która zawiera wysokości punktów. 
+Do wykonania tego obliczenia wymagany jest wybór 2 punktów, w innym przypadku zostanie zwrócony komunikat o nie spełnieniu tego warunku. 
+Finalnie po użyciu przycisku **Oblicz (9)** w **oknie wynikowym (5)** zostanie wyświetlona wartość przewyższenia w kierunku głównym jak i w kierunku powrotnym. 
+
+<p align="center">
+  <img src="https://i.imgur.com/d2w7huc.png" />
+</p>
+
+Natomiast po zaznaczeniu **Pole powierzchni** (2) wyświetli się **wybór jednostek (2a, 2b, 2c)** w jakich ma być obliczone pole. Domyślną jednostką są metry kwadratowe.
+
+<p align="center">
+  <img src="https://i.imgur.com/Xp8TP5K.png" />
+</p>
+
+Pojawia się również dodatkowa opcja **rysowania poligonu (2d)** na żądanie uzytkownika opartego na zaznaczonych punktach. 
+Następnie należy wybrać **warstwę (3)** oraz nacisnąć przycisk **Oblicz (9)**, czego następstwem będzie obliczenie pola oraz ewentualne utworzenie nowej warstwy z wrysowanym poligonem jeżeli użytkownik tego zażądał.
+Finalnie w oknie wynikowym (5)pojawi się pole powierzchni obszaru rozpietego na wybranych punktach.
+
+W celu obliczenia pola powierzchni wymagany jest wybór przynajmniej 3 punktów, jeśli liczba wybranych punktów jest mniejsza zostanie zwrócony komunikat informujący o nie spełnieniu tego warunku.
+
+<!--
+**UWAGA**: W celu obliczenia pola powierzchni należy wybrać metodę 1 lub metodę 3 wyboru punktu ,czyli zaznaczenie punktów bezpośrednio na warstwie. Zastosowanie metody 2 zwraca błędny wynik na warstwach, których struktura tabeli atrybutów jest różna od struktur przedstawionych poniżej w **Obsługa pliku wewnątrz wtyczki.**.
+-->
 
 
-### Pozostałe funkcje
+### Obsługa pliku wewnątrz wtyczki.
+Możliwe jest także opracowanie pliku wewnątrz wtyczki. Wtyczka obsługuje pliki formatu *.txt* oraz *.csv* dla układu współrzednych PL-1992 oraz PL-2000.
+W celu zaimportowania pliku należy zaznaczyć **układ współrzędnych (10/11)** w jakich wgrany ma być plik. Ponadto przy wyborze układu PL-2000, konieczne jest określenie strefy, w której znajdują się punkty poprzez zaznaczenie dostępnych do wyboru **stref (10a/10b/10c/10d)**. Następnie nalezy wskazać lokalizację pliku poprzez podanie **ścieżki dostępu (12)** lub naciśnięcia **[...]**, po którym pojawi się *Eksplorator plików* w celu wybrania pliku. Należy też **nazwać nowo tworzoną warstwę (13)** inaczej warstwa nie będzie miała nazwy. Przyciskiem **Wczytaj (14)** nalezy sfinalizować tą funkcjonalność.
 
-## Opis przykładowych danych wgrania
+Przykładowa struktura pliku:
+1. **xy1992.txt** w układzie PL-1992
+>1 239382.6473 644577.0195 100.00\
+>2 243167.6185 645161.3032 101.00\
+>3 247142.0552 644755.1646 102.00\
+>4 250075.7519 644705.4659 103.00
+2. **xy2000.txt** w układzie PL-2000
+>1 5540883.974 7501304.251 100.00\
+>2 5544653.338 7501989.823 101.00\
+>3 5548638.675 7501690.090 102.00\
+>4 5551573.724 7501718.971 103.00
 
+W strukturze obu plików układ kolumn jest rownoważny. Pierwsza kolumna stanowi numer punktu, druga współrzędną X [m], trzecia współrzędną Y[m], czwarta H[m] <!--w odpowiednim  układzie odniesienia wysokosci tj. PL1992 - PL-KRON86-NH, PL2000 - PL-EUFRV2007-NH. -->
 
-## Błędy
+### Obsługa dodatkowych funkcjonalności
+Dodatkowe funkcjonalności umożliwiają:
+- Wyczyszczenie okna wynikowego przy użyciu przycisku **Wyczyść (8)**
+- Zresetowanie zaznaczonch punktów na warstwie oraz **zaznaczenych numerów ID (4)** w na żądanie użytkownika przy uzyciu przycisku **Odznacz (6)**
+- Możliwość narysowania poligonu na żądanie uzytkownika. W tym celu nalezy zaznaczyć checkbox **Rysujj poligon (2d)**. Skutkiem działania tej funkcjonalności jest utworzenie nowej warstwy *'poligon'* w projekcie zawierającej poligon rozpoztarty na wybranych punkatch.
+<!--
+## Uwagi
+W celu obliczenia przewyższenia nie ma zanaczenia jaka metoda zaznaczania punktow będzie wybrana, natomiast przy wyznaczeniu pola powierzchni zaleca się zaznaczanie punktów metodą 1 lub 3.
+
+## Błędy rozwiązane
+- Przy wyznaczaniu pola powierzchni algorytm wtyczki źle interpretuje punkty zaznaczone metoda 2. Aby zapewnic prawidłowość wyznaczenia pola należy postępowac zgodnie z schematem obsługi przedstawionym powyżej. Ponadto funkcjonalność wtyczki została ograniczona do mozliwości wyboru punktów metodą 1 oraz 3. 
+-->
+## Błędy nierozwiązane
+- Przy wyborze warstwy z ogromną ilością obiektów istnieje prawdopodobieństwo krótkiego zawieszenia programu
+- Algorytm wtyczki oblicza pole powierzchni metodą Gaussa, ale zauważono że dla niektórych poligonów niezachowuje on stałej skrętności przechodzenia na punkty po długościach boków tych poligonów, a zmienia ją w trakcie obliczania pola tzn. zaczyna obliczanie zgodnie z ruchem wskazówek zegara ,a następnie zmienia kierunek na przeciwny. Powiązane może to być z indeksacją punktów po numerze ich numerach w zmiennej selected_features zastosowaną w funkcji oblicz. Powiodło się jedynie częściowe wyeliminowanie tego błędu. Ponizej znajduje się przykład opisanej powyżej sytuacji ,kiedy algorytm poprawnie rozwiązuje zadanie oraz kiedy błędnie.
+Poprawne rozwiązanie: 
+
+<p align="center">
+  <img src="https://i.imgur.com/CKwXZ26.png" />
+</p>
+
+Niepoprawne rozwiązanie z zwizualizowaniem opisanego błędu: 
+
+<p align="center">
+  <img src="https://i.imgur.com/is47EGH.png" />
+</p>
