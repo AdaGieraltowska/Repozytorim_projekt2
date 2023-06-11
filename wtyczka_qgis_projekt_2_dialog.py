@@ -398,7 +398,7 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 
                 
             if n > 4:
-                wiadomosc = f'Pole powierzchni figury o liczbie wierzchołków większej niż 4 nie działa poprawnie'
+                wiadomosc = f'Pole powierzchni figury o liczbie wierzchołków większej niż 4 może prowadzić do błędnych wyników.'
             else:
                 wiadomosc = f'Pole powierzchni figury o wierzchołkach w punktach o ID:{id} wynosi: {round(pole,3)} {jednostka}'
             self.plainTextEdit_wyniki.appendPlainText(wiadomosc)
