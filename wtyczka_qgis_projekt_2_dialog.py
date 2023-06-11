@@ -348,6 +348,8 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
             iface.messageBar().pushMessage(wiadomosc)
             
         elif self.radioButton_pole.isChecked() == True:
+            layer = iface.activeLayer()
+            selected_features = layer.selectedFeatures()
             if len(selected_features) < 3:
                 QgsMessageLog.logMessage("Prosze wybrac minimum 3 punkty.")
                 return
@@ -365,17 +367,65 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                         wsp2.append((x,y))
                 else:
                     QgsMessageLog.logMessage("Niepoprawna geometria")
-
-            wsp = sorted(wsp, key=lambda p: (p[0], p[1]))
-
-            n = len(wsp)
+            
+            # JUŻ NIE MAM POMYSŁU JAK NAPRAWIC TE POLE  :( ,dla nie których punktów nadal się przecinają
+            wsp_1 = sorted(wsp2, key=lambda p: p[1]) # to są xy posortowane po y
+            wsp_2 = sorted(wsp, key=lambda p: p[0]) # to są yx posortowane po y
+            
+            wsp_3 = sorted(wsp2, key=lambda p: p[0]) # to są xy posortowane po x
+            wsp_4 = sorted(wsp, key=lambda p: p[1]) # to są yx posortowane po x
+            n = len(wsp_1)
+            
             pole = 0.0
             for i in range(n):
                 j = (i+1)%n
-                pole += wsp[i][0]*wsp[j][1]-wsp[j][0]*wsp[i][1]
+                pp = wsp_1[i][0]*wsp_1[j][1]-wsp_1[j][0]*wsp_1[i][1]
+                # self.plainTextEdit_wyniki.appendPlainText(str(pp))
+                pole += wsp_1[i][0]*wsp_1[j][1]-wsp_1[j][0]*wsp_1[i][1]
             pole /= 2
             pole = abs(pole)
+            # self.plainTextEdit_wyniki.appendPlainText("pole1")
+            # self.plainTextEdit_wyniki.appendPlainText(str(pole))
+            
+            
+            pole2 =0.0
+            for i in range(n):
+                j = (i+1)%n
+                pp = wsp_2[i][0]*wsp_2[j][1]-wsp_2[j][0]*wsp_2[i][1]
+                # self.plainTextEdit_wyniki.appendPlainText(str(pp))
+                pole2 += wsp_2[i][0]*wsp_2[j][1]-wsp_2[j][0]*wsp_2[i][1]
+            pole2 /= 2
+            pole2 = abs(pole2)            
+            # self.plainTextEdit_wyniki.appendPlainText("pole2")
+            # self.plainTextEdit_wyniki.appendPlainText(str(pole2))
+            
+            pole3 = 0.0
+            for i in range(n):
+                j = (i+1)%n
+                pp = wsp_3[i][0]*wsp_3[j][1]-wsp_3[j][0]*wsp_3[i][1]
+                # self.plainTextEdit_wyniki.appendPlainText(str(pp))
+                pole3 += wsp_3[i][0]*wsp_3[j][1]-wsp_3[j][0]*wsp_3[i][1]
+            pole3 /= 2
+            pole3 = abs(pole3)
+            # self.plainTextEdit_wyniki.appendPlainText("pole3")
+            # self.plainTextEdit_wyniki.appendPlainText(str(pole3))
+            
+            pole4 = 0.0
+            for i in range(n):
+                j = (i+1)%n
+                pp = wsp_4[i][0]*wsp_4[j][1]-wsp_4[j][0]*wsp_4[i][1]
+                # self.plainTextEdit_wyniki.appendPlainText(str(pp))
+                pole4 += wsp_4[i][0]*wsp_4[j][1]-wsp_4[j][0]*wsp_4[i][1]
+            pole4 /= 2
+            pole4 = abs(pole3)
+            # self.plainTextEdit_wyniki.appendPlainText("pole4")
+            # self.plainTextEdit_wyniki.appendPlainText(str(pole4))
+            
 
+            
+            pola = [pole,pole2,pole3,pole4]
+            pole = max(pola)
+                
             if self.checkBox_ha.isChecked() == True:
                 pole = pole/10000
                 jednostka = 'ha'
@@ -383,6 +433,7 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 jednostka = 'm2'
             elif self.checkBox_a.isChecked() == True:
                 pole = pole/100
+                
                 jednostka = 'a'
             else:
                 QgsMessageLog.logMessage("Niewybrano jednostki, domyślna to metry")
