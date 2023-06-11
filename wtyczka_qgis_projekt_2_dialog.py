@@ -391,10 +391,12 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 QgsMessageLog.logMessage("Niewybrano jednostki, domyślna to metry")
                 jednostka = 'm2'
 
+            pole_gauss = pole
             id = ''
             for i in selected_features:
                 id = id + str(i.id()) + ', '
-
+                
+                
             if n > 4:
                 wiadomosc = f'Pole powierzchni figury o liczbie wierzchołków większej niż 4 nie działa poprawnie'
             else:
@@ -441,9 +443,16 @@ class WtyczkaQgisProjekt2Dialog(QtWidgets.QDialog, FORM_CLASS):
                 else:
                     QgsMessageLog.logMessage("Niewybrano jednostki, domyślna to metry")
                     jednostka = 'm2'
+                   
 
-                wiadomosc2 = f'Pole powierzchni(geometry().area()) figury o wierzchołkach w punktach o ID:{id} wynosi: {round(pole,3)} {jednostka}'
+                wiadomosc2 = f'Pole powierzchni(geometry().area()) figury o wierzchołkach w punktach o ID:{id} wynosi: {round(pole,3)} {jednostka}.  '
                 self.plainTextEdit_wyniki.appendPlainText(wiadomosc2)
                 iface.messageBar().pushMessage(wiadomosc2)
+                if abs(pole_gauss- pole) >= 0.0000001:
+                    wiadomosc3 = f'Pole powierzchni(geometry().area()) figury o wierzchołkach w punktach o ID:{id} oraz pole obliczone metodą Gaussa są różne. Nastąpił błąd opisany dokładniej w readme'
+                    self.plainTextEdit_wyniki.appendPlainText(wiadomosc3)
+                    iface.messageBar().pushMessage(wiadomosc3)
+
+
 
                 iface.setActiveLayer(layer)
