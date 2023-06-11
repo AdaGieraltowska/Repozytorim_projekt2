@@ -14,12 +14,12 @@ Wtyczka oblicza różnice wysokości oraz pole powierzchni metodą Gaussa na pod
 Wtyczka posiada dodatkowe funkcjonalności takie jak:
 - Wyczyszczenie okna wynikowego.
 - Zresetowanie zaznaczonch punktów na warstwie na żądanie użytkownika.
-- Możliwość narysowania poligonu opartego w wybrane punkty na żądanie uzytkownika.
-- Możliwość wgrania pliku .txt do projektu.
+- Możliwość narysowania poligonu opartego na wybranych punktach na żądanie uzytkownika.
+- Możliwość wgrania pliku .txt .csv do projektu.
 
 
 ### Opis interfejsu użytkownika
-Wtyczka po uruchomieniu wygląda następująco i podzielony jest na dwie główne sekcje: lewą obsługującą obliczenie pola powierzchni oraz przewyższenia i prawą obsługującą importowanie pliku .txt do projektu wraz z sepecyfikacjami dotyczącymi importu. 
+Wtyczka po uruchomieniu wygląda następująco i podzielony jest na dwie główne sekcje: lewą obsługującą obliczenie pola powierzchni oraz przewyższenia i prawą obsługującą importowanie pliku .txt .csv do projektu wraz z sepecyfikacjami dotyczącymi importu. 
 <!--
 <p align="center">
   <img src="https://i.imgur.com/d80RQHe.png" />
@@ -88,7 +88,7 @@ Następnie należy wybrać **warstwę (3)** oraz nacisnąć przycisk **Oblicz (9
 Finalnie w oknie wynikowym (5)pojawi się pole powierzchni obszaru rozpietego na wybranych punktach.
 
 W celu obliczenia pola powierzchni wymagany jest wybór przynajmniej 3 punktów, jeśli liczba wybranych punktów jest mniejsza zostanie zwrócony komunikat informujący o nie spełnieniu tego warunku.
-
+Algorytm wtyczki poprawnie oblicza polę powierzchni obszaru rozpiętego na 3 punktach. Problem powstaje kiedy użytkownik zażąda wyznaczenia pola o większej liczbie wierzchołków ,w przypadku błędnego rozwiązania zadania w oknie dialogowym (5) pojawia się stosowny komunikat.
 <!--
 **UWAGA**: W celu obliczenia pola powierzchni należy wybrać metodę 1 lub metodę 3 wyboru punktu ,czyli zaznaczenie punktów bezpośrednio na warstwie. Zastosowanie metody 2 zwraca błędny wynik na warstwach, których struktura tabeli atrybutów jest różna od struktur przedstawionych poniżej w **Obsługa pliku wewnątrz wtyczki.**.
 -->
@@ -110,8 +110,8 @@ Przykładowa struktura pliku:
 >3 5548638.675 7501690.090 102.00\
 >4 5551573.724 7501718.971 103.00
 
-W strukturze obu plików układ kolumn jest rownoważny. Pierwsza kolumna stanowi numer punktu, druga współrzędną X [m], trzecia współrzędną Y[m], czwarta H[m] <!--w odpowiednim  układzie odniesienia wysokosci tj. PL1992 - PL-KRON86-NH, PL2000 - PL-EUFRV2007-NH. -->
-
+W strukturze obu plików **.txt** układ kolumn jest rownoważny. Pierwsza kolumna stanowi numer punktu, druga współrzędną X [m], trzecia współrzędną Y [m], czwarta H [m] <!--w odpowiednim  układzie odniesienia wysokosci tj. PL1992 - PL-KRON86-NH, PL2000 - PL-EUFRV2007-NH. -->
+Struktura plików **xy1992.csv** i **xy2000.csv** jest identyczna jak struktura plików z rozszerzeniem .txt opisanych powyżej.
 ### Obsługa dodatkowych funkcjonalności
 Dodatkowe funkcjonalności umożliwiają:
 - Wyczyszczenie okna wynikowego przy użyciu przycisku **Wyczyść (8)**
@@ -125,9 +125,10 @@ W celu obliczenia przewyższenia nie ma zanaczenia jaka metoda zaznaczania punkt
 - Przy wyznaczaniu pola powierzchni algorytm wtyczki źle interpretuje punkty zaznaczone metoda 2. Aby zapewnic prawidłowość wyznaczenia pola należy postępowac zgodnie z schematem obsługi przedstawionym powyżej. Ponadto funkcjonalność wtyczki została ograniczona do mozliwości wyboru punktów metodą 1 oraz 3. 
 -->
 ## Błędy nierozwiązane
-- Przy wyborze warstwy z ogromną ilością obiektów istnieje prawdopodobieństwo krótkiego zawieszenia programu
+- Przy wyborze warstwy z ogromną ilością obiektów istnieje prawdopodobieństwo krótkiego zawieszenia programu.
 - Możliwa jest sytuacja kiedy poligon narysuje się w innym miejscu niż powinien, ponieważ przyjął inną wartość EPSG niż warstwa, na której jest rysowany. Zaleca się wtedy usunięcie poligonu i ponowne wczytanie warstwy, a w ostateczności zresetowanie wtyczki.
-- Algorytm wtyczki oblicza pole powierzchni metodą Gaussa, ale zauważono że dla niektórych poligonów niezachowuje on stałej skrętności przechodzenia na punkty po długościach boków tych poligonów, a zmienia ją w trakcie obliczania pola tzn. zaczyna obliczanie zgodnie z ruchem wskazówek zegara ,a następnie zmienia kierunek na przeciwny. Powiązane może to być z indeksacją punktów po numerze ich numerach w zmiennej selected_features zastosowaną w funkcji oblicz. Powiodło się jedynie częściowe wyeliminowanie tego błędu. Ponizej znajduje się przykład opisanej powyżej sytuacji ,kiedy algorytm poprawnie rozwiązuje zadanie oraz kiedy błędnie.
+- W przypadku poligonów wklęsłych algorytm nie wrysuje ich poprawnie.
+- Algorytm wtyczki oblicza pole powierzchni metodą Gaussa, zauważono jednak ,że dla niektórych poligonów niezachowuje on stałej skrętności przechodzenia na punkty po długościach boków tych poligonów, a zmienia ją w trakcie obliczania pola tzn. zaczyna obliczanie zgodnie z ruchem wskazówek zegara ,a następnie zmienia kierunek na przeciwny. Powiodło się jedynie częściowe wyeliminowanie tego błędu. W przypadku błędnego rozwiązania zadania algorytm zwróci stosowny komunikat na ten temat. Ponizej znajduje się przykład opisanej powyżej sytuacji ,kiedy algorytm poprawnie rozwiązuje zadanie oraz kiedy błędnie. 
 Poprawne rozwiązanie: 
 
 <p align="center">
