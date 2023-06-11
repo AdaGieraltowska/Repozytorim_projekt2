@@ -126,6 +126,7 @@ W celu obliczenia przewyższenia nie ma zanaczenia jaka metoda zaznaczania punkt
 -->
 ## Błędy nierozwiązane
 - Przy wyborze warstwy z ogromną ilością obiektów istnieje prawdopodobieństwo krótkiego zawieszenia programu
+- Możliwa jest sytuacja kiedy poligon narysuje się w innym miejscu niż powinien, ponieważ przyjął inną wartość EPSG niż warstwa, na której jest rysowany. Zaleca się wtedy usunięcie poligonu i ponowne wczytanie warstwy, a w ostateczności zresetowanie wtyczki.
 - Algorytm wtyczki oblicza pole powierzchni metodą Gaussa, ale zauważono że dla niektórych poligonów niezachowuje on stałej skrętności przechodzenia na punkty po długościach boków tych poligonów, a zmienia ją w trakcie obliczania pola tzn. zaczyna obliczanie zgodnie z ruchem wskazówek zegara ,a następnie zmienia kierunek na przeciwny. Powiązane może to być z indeksacją punktów po numerze ich numerach w zmiennej selected_features zastosowaną w funkcji oblicz. Powiodło się jedynie częściowe wyeliminowanie tego błędu. Ponizej znajduje się przykład opisanej powyżej sytuacji ,kiedy algorytm poprawnie rozwiązuje zadanie oraz kiedy błędnie.
 Poprawne rozwiązanie: 
 
